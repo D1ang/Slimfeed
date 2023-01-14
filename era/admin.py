@@ -1,21 +1,27 @@
 from django.contrib import admin
-from .models import Week, Day
+from .models import Week, Day, Meal
 
+
+class MealInline(admin.TabularInline):
+    model = Meal
 
 
 class DayInline(admin.TabularInline):
-    """
-    Inline upload attachment field
-    for the item admin
-    """
     model = Day
-    extra = 1
+    inlines = [
+        MealInline
+    ]
 
 
-class ItemAdmin(admin.ModelAdmin):
+
+
+
+@admin.register(Week)
+class WeekAdmin(admin.ModelAdmin):
     inlines = [
         DayInline,
     ]
 
-
-admin.site.register(Week, ItemAdmin)
+@admin.register(Meal)
+class MealAdmin(admin.ModelAdmin):
+    pass
