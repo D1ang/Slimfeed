@@ -1,3 +1,14 @@
 from django.contrib import admin
+from .models import Product, Unit
 
-# Register your models here.
+
+class ProductAdmin(admin.ModelAdmin):
+    pass
+
+
+class UnitAdmin(admin.ModelAdmin):
+    pass
+
+
+admin.site.register(Product, ProductAdmin)
+admin.site.register(Unit, UnitAdmin)
