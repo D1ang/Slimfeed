@@ -1,8 +1,14 @@
 from django.db import models
+from django.db.models import Max
 
 
 class Week(models.Model):
-    week = models.PositiveIntegerField(unique=True)
+
+    def get_last_week():
+        current_last_week = Week.objects.all().aggregate(last_week=Max('week'))['last_week']
+        return current_last_week + 1 if current_last_week else 1
+
+    week = models.PositiveIntegerField(default=get_last_week)
 
     def __str__(self):
         return f"Week {self.week}"
