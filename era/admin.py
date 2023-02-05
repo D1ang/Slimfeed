@@ -1,17 +1,18 @@
 from django.contrib import admin
 from django.db.models import Max
 from .models import Week, Day, Meal
-
-
-class MealInline(admin.TabularInline):
-    model = Meal
+from nested_admin import NestedTabularInline, NestedModelAdmin
 
 
 class DayInline(admin.TabularInline):
     model = Day
-    inlines = [
-        MealInline
-    ]
+    extra = 7
+    max_num = 7
+    can_delete = False
+    show_change_link = False
+
+    def has_delete_permission(self, request, obj=None):
+        return False
 
 
 @admin.register(Week)
@@ -28,9 +29,8 @@ class WeekAdmin(admin.ModelAdmin):
             obj.week = current_max_week + 1 if current_max_week else 1
         super().save_model(request, obj, form, change)
 
-    inlines = [
-        DayInline,
-    ]
+    inlines = [DayInline]
+    ordering = ['week']
 
 
 @admin.register(Meal)
