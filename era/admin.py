@@ -1,22 +1,29 @@
 from django.contrib import admin
 from django.db.models import Max
 from .models import Week, Day, Meal
-from nested_admin import NestedTabularInline, NestedModelAdmin
+import nested_admin
 
 
-class DayInline(admin.TabularInline):
+class MealInline(nested_admin.NestedTabularInline):
+    model = Meal
+    extra = 0
+
+
+class DayInline(nested_admin.NestedStackedInline):
     model = Day
     extra = 7
     max_num = 7
     can_delete = False
     show_change_link = False
 
+    inlines = [MealInline]
+
     def has_delete_permission(self, request, obj=None):
         return False
 
 
 @admin.register(Week)
-class WeekAdmin(admin.ModelAdmin):
+class WeekAdmin(nested_admin.NestedModelAdmin):
     """
     if the object doesn't have a primary key,
     'save_model' will set the week to the current maximum week +1,
@@ -31,8 +38,3 @@ class WeekAdmin(admin.ModelAdmin):
 
     inlines = [DayInline]
     ordering = ['week']
-
-
-@admin.register(Meal)
-class MealAdmin(admin.ModelAdmin):
-    pass

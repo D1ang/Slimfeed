@@ -13,14 +13,7 @@ class Week(models.Model):
     week = models.PositiveIntegerField(default=get_last_week)
 
     def __str__(self):
-        return f"Week {self.week}"
-
-
-class Meal(models.Model):
-    description = models.CharField(max_length=100)
-    
-    def __str__(self):
-        return self.description
+        return f'Week {self.week}'
 
 
 class Day(models.Model):
@@ -34,8 +27,22 @@ class Day(models.Model):
         ('sunday', 'Sunday'),
     )
     week = models.ForeignKey(Week, on_delete=models.CASCADE)
-    day = models.CharField(max_length=10, choices=DAYS_OF_WEEK)
-    meal_type = models.ManyToManyField(Meal)
+    day_name = models.CharField(max_length=10, choices=DAYS_OF_WEEK)
 
     def __str__(self):
-        return self.day
+        return self.day_name
+
+
+class Meal(models.Model):
+    MEAL_OF_DAY = (
+        ('breakfast', 'Breakfast'),
+        ('lunch', 'Lunch'),
+        ('diner', 'Diner'),
+        ('snack', 'Snack'),
+    )
+    day = models.ForeignKey(Day, on_delete=models.CASCADE)
+    meal_type = models.CharField(max_length=10, choices=MEAL_OF_DAY)
+    product = models.ManyToManyField(Product)
+    
+    def __str__(self):
+        return self.description
